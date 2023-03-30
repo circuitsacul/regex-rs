@@ -4,7 +4,7 @@ use pyo3::prelude::*;
 
 use crate::{
     captures::{Captures, CapturesIter},
-    error::RegexResult,
+    error::RegexError,
     match_struct::{Match, Matches},
     split::Split,
 };
@@ -45,7 +45,7 @@ impl Regex {
         size_limit: Option<usize>,
         swap_greed: Option<bool>,
         unicode: Option<bool>,
-    ) -> RegexResult<Self> {
+    ) -> PyResult<Self> {
         let mut builder = regex::RegexBuilder::new(pattern);
 
         if let Some(val) = case_insensitive {
@@ -83,7 +83,7 @@ impl Regex {
             .build()
             .map(Arc::new)
             .map(Self)
-            .map_err(|e| e.into())
+            .map_err(|e| RegexError::from(e).into())
     }
 
     pub fn is_match(&self, text: &str) -> bool {
