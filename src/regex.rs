@@ -1,10 +1,12 @@
+use std::sync::Arc;
+
 use pyo3::prelude::*;
 
 use crate::{captures::Captures, error::RegexResult, match_struct::Match};
 
 #[pyclass]
 #[derive(Debug)]
-pub struct Regex(regex::Regex);
+pub struct Regex(Arc<regex::Regex>);
 
 // constructor
 #[pymethods]
@@ -72,35 +74,38 @@ impl Regex {
             builder.unicode(val);
         }
 
-        builder.build().map(Self).map_err(|e| e.into())
+        builder.build().map(Arc::new).map(Self).map_err(|e| e.into())
     }
 
     pub fn is_match(&self, text: &str) -> bool {
         self.0.is_match(text)
     }
 
-    pub fn find(&self, text: &str) -> Option<Match> {
-        self.0.find(text).map(|m| m.into())
+    #[pyo3(signature = (text, start=None))]
+    pub fn find(&self, text: &str, start: Option<usize>) -> Option<Match> {
+        let mat = if let Some(start) = start {
+            self.0.find_at(text, start)
+        } else {
+            self.0.find(text)
+        };
+
+        mat.map(|m| m.into())
     }
 
-    pub fn find_iter(&self, _text: &str) {
-        todo!()
+    pub fn find_iter(&self, text: &str) -> Vec<Match> {
+        self.0.find_iter(text).map(|m| m.into()).collect()
     }
 
     pub fn captures(&self, text: String) -> Option<Captures> {
-        Captures::try_new(text, |text| self.0.captures(text).ok_or(())).ok()
+        Captures::try_new(Arc::new(text), |text| self.0.captures(text).ok_or(())).ok()
     }
 
-    pub fn captures_iter(&self, _text: &str) {
-        todo!()
+    pub fn split(&self, text: &str) -> Vec<String> {
+        self.0.split(text).map(|v| v.to_owned()).collect()
     }
 
-    pub fn split(&self, _text: &str) {
-        todo!()
-    }
-
-    pub fn splitn(&self, _text: &str, _limit: usize) {
-        todo!()
+    pub fn splitn(&self, text: &str, limit: usize) -> Vec<String> {
+        self.0.splitn(text, limit).map(|v| v.to_owned()).collect()
     }
 
     pub fn replace(&self, text: &str, rep: &str) -> String {

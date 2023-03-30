@@ -3,8 +3,11 @@ use pyo3::prelude::*;
 #[pyclass]
 #[derive(Debug)]
 pub struct Match {
+    #[pyo3(get)]
     pub matched_text: String,
+    #[pyo3(get)]
     pub start: usize,
+    #[pyo3(get)]
     pub end: usize,
 }
 
