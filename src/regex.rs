@@ -104,6 +104,13 @@ impl Regex {
         Captures::try_new(Arc::new(text), |text| self.0.captures(text).ok_or(())).ok()
     }
 
+    pub fn captures_iter(&self, text: String) -> Vec<Captures> {
+        let text = Arc::new(text);
+        self.0.captures_iter(&text)
+        .map(|caps| Captures::new(text.clone(), |text| caps.adopt(text)))
+        .collect()
+    }
+
     #[pyo3(signature = (text, limit=None))]
     pub fn split(&self, text: &str, limit: Option<usize>) -> Vec<String> {
         if let Some(limit) = limit {
