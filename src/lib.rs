@@ -1,8 +1,8 @@
-mod regex;
-mod error;
 mod capture_locations;
-mod match_struct;
 mod captures;
+mod error;
+mod match_struct;
+mod regex;
 
 use pyo3::prelude::*;
 

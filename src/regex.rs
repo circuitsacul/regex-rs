@@ -74,7 +74,11 @@ impl Regex {
             builder.unicode(val);
         }
 
-        builder.build().map(Arc::new).map(Self).map_err(|e| e.into())
+        builder
+            .build()
+            .map(Arc::new)
+            .map(Self)
+            .map_err(|e| e.into())
     }
 
     pub fn is_match(&self, text: &str) -> bool {
