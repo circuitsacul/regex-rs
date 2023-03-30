@@ -2,7 +2,12 @@ use std::sync::Arc;
 
 use pyo3::prelude::*;
 
-use crate::{captures::Captures, error::RegexResult, match_struct::Match};
+use crate::{
+    captures::{Captures, CapturesIter},
+    error::RegexResult,
+    match_struct::{Match, Matches},
+    split::Split,
+};
 
 #[pyclass]
 #[derive(Debug)]
@@ -96,28 +101,22 @@ impl Regex {
         mat.map(|m| m.into())
     }
 
-    pub fn find_iter(&self, text: &str) -> Vec<Match> {
-        self.0.find_iter(text).map(|m| m.into()).collect()
+    pub fn find_iter(&self, text: String) -> Matches {
+        Matches::new(text, self.0.clone(), |text, re| re.find_iter(text))
     }
 
     pub fn captures(&self, text: String) -> Option<Captures> {
         Captures::try_new(Arc::new(text), |text| self.0.captures(text).ok_or(())).ok()
     }
 
-    pub fn captures_iter(&self, text: String) -> Vec<Captures> {
+    pub fn captures_iter(&self, text: String) -> CapturesIter {
         let text = Arc::new(text);
-        self.0.captures_iter(&text)
-        .map(|caps| Captures::new(text.clone(), |text| caps.adopt(text)))
-        .collect()
+        CapturesIter::new(text, self.0.clone(), |text, re| re.captures_iter(text))
     }
 
     #[pyo3(signature = (text, limit=None))]
-    pub fn split(&self, text: &str, limit: Option<usize>) -> Vec<String> {
-        if let Some(limit) = limit {
-            self.0.splitn(text, limit).map(|v| v.to_owned()).collect()
-        } else {
-            self.0.split(text).map(|v| v.to_owned()).collect()
-        }
+    pub fn split(&self, text: String, limit: Option<usize>) -> Split {
+        Split::new(text, self.0.clone(), limit, |text, re| re.split(text))
     }
 
     #[pyo3(signature = (text, rep, limit=None))]

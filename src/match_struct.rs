@@ -1,3 +1,6 @@
+use std::sync::Arc;
+
+use ouroboros::self_referencing;
 use pyo3::prelude::*;
 
 #[pyclass]
@@ -29,5 +32,31 @@ impl Match {
 
     fn __repr__(&self) -> String {
         format!("{self:#?}")
+    }
+}
+
+#[pyclass]
+#[self_referencing(pub_extras)]
+pub struct Matches {
+    text: String,
+    re: Arc<regex::Regex>,
+
+    #[borrows(text, re)]
+    #[not_covariant]
+    matches: regex::Matches<'this, 'this>,
+}
+
+#[pymethods]
+impl Matches {
+    pub fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
+        slf
+    }
+
+    pub fn __next__(&mut self) -> Option<Match> {
+        self.with_matches_mut(|iter| iter.next().map(|m| m.into()))
+    }
+
+    pub fn __repr__(&self) -> String {
+        self.with_matches(|matches| format!("{matches:#?}"))
     }
 }
