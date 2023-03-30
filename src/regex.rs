@@ -104,24 +104,22 @@ impl Regex {
         Captures::try_new(Arc::new(text), |text| self.0.captures(text).ok_or(())).ok()
     }
 
-    pub fn split(&self, text: &str) -> Vec<String> {
-        self.0.split(text).map(|v| v.to_owned()).collect()
+    #[pyo3(signature = (text, limit=None))]
+    pub fn split(&self, text: &str, limit: Option<usize>) -> Vec<String> {
+        if let Some(limit) = limit {
+            self.0.splitn(text, limit).map(|v| v.to_owned()).collect()
+        } else {
+            self.0.split(text).map(|v| v.to_owned()).collect()
+        }
     }
 
-    pub fn splitn(&self, text: &str, limit: usize) -> Vec<String> {
-        self.0.splitn(text, limit).map(|v| v.to_owned()).collect()
-    }
-
-    pub fn replace(&self, text: &str, rep: &str) -> String {
-        self.0.replace(text, rep).into_owned()
-    }
-
-    pub fn replace_all(&self, text: &str, rep: &str) -> String {
-        self.0.replace_all(text, rep).into_owned()
-    }
-
-    pub fn replacen(&self, text: &str, limit: usize, rep: &str) -> String {
-        self.0.replacen(text, limit, rep).into_owned()
+    #[pyo3(signature = (text, rep, limit=None))]
+    pub fn replace(&self, text: &str, rep: &str, limit: Option<usize>) -> String {
+        if let Some(limit) = limit {
+            self.0.replacen(text, limit, rep).into_owned()
+        } else {
+            self.0.replace_all(text, rep).into_owned()
+        }
     }
 
     // magic
