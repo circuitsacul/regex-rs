@@ -4,12 +4,19 @@ build-backend = "maturin"
 
 [project]
 name = "regex-rs"
+description = "Python bindings for the Rust regex crate."
+readme = "README.md"
 requires-python = ">=3.7"
+license = {file = "LICENSE"}
+keywords = ["rust", "maturin", "regex"]
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
+
+[project.urls]
+repository = "github.com/circuitsacul/regex-rs"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
