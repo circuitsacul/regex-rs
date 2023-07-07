@@ -5,7 +5,6 @@ use pyo3::prelude::*;
 
 #[pyclass]
 #[self_referencing(pub_extras)]
-#[derive(Debug)]
 pub struct Split {
     pub text: String,
     pub re: Arc<regex::Regex>,
@@ -39,9 +38,5 @@ impl Split {
         }
 
         self.with_split_mut(|split| split.next())
-    }
-
-    pub fn __repr__(&self) -> String {
-        format!("{self:#?}")
     }
 }
