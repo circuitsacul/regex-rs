@@ -265,7 +265,7 @@ dependencies = [
 
 [[package]]
 name = "regex-rs"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "ouroboros",
  "pyo3",
