@@ -16,7 +16,7 @@ classifiers = [
 ]
 
 [project.urls]
-repository = "github.com/circuitsacul/regex-rs"
+repository = "https://github.com/circuitsacul/regex-rs"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
