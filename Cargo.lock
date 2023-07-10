@@ -245,7 +245,7 @@ dependencies = [
 [[package]]
 name = "regex"
 version = "1.9.1"
-source = "git+https://github.com/circuitsacul/regex-adopt#e38f414d738db0da852383adfe3d4491b48e4516"
+source = "git+https://github.com/circuitsacul/regex-adopt#ce6f2b1a2e20aa7887d660419a9218da2f461617"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -256,7 +256,7 @@ dependencies = [
 [[package]]
 name = "regex-automata"
 version = "0.3.1"
-source = "git+https://github.com/circuitsacul/regex-adopt#e38f414d738db0da852383adfe3d4491b48e4516"
+source = "git+https://github.com/circuitsacul/regex-adopt#ce6f2b1a2e20aa7887d660419a9218da2f461617"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -265,7 +265,7 @@ dependencies = [
 
 [[package]]
 name = "regex-rs"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
  "ouroboros",
  "pyo3",
@@ -275,7 +275,7 @@ dependencies = [
 [[package]]
 name = "regex-syntax"
 version = "0.7.3"
-source = "git+https://github.com/circuitsacul/regex-adopt#e38f414d738db0da852383adfe3d4491b48e4516"
+source = "git+https://github.com/circuitsacul/regex-adopt#ce6f2b1a2e20aa7887d660419a9218da2f461617"
 
 [[package]]
 name = "scopeguard"
