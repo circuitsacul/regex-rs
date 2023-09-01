@@ -10,5 +10,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 ouroboros = "0.17.2"
-pyo3 = "0.19.1"
+pyo3 = "0.19.2"
 regex = { git = "https://github.com/circuitsacul/regex-adopt" }
